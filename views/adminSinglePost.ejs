@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Single Post</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <h1 class="head">Single Post</h1>
+    <div class="single-container">
+        <div class="single-inner-container" id="post-data">
+            <h4 class="heading">Post Data</h4>
+            <div class="inner-data">
+                <div class="padd">
+                    <h4>
+                        <%=postData.postTitle%> <span>(<%=postData.date%>)</span>
+                    </h4>
+                    <div class="img-container">
+                        <img src="/images/<%=postData.postImage%>" alt="">
+                        <div class="img-details">
+                            <h4>Content</h4>
+                            <p>
+                                <%=postData.postContent%>
+                            </p>
+                        </div>
+                    </div>
+                    <h4 class="author-details">
+                        <%=postData.postAuthor.fullName%>
+                    </h4>
+                    <h4 class="author-details">
+                        <%=postData.postAuthor.userName%>
+                    </h4>
+                    <h4 class="author-details">
+                        <%=postData.postAuthor.email%>
+                    </h4>
+                </div>
+                <div class="comment">
+                    <form method="post" id="my-form">
+                        <input type="text" name="comment" placeholder="Add Comment.....">
+                        <input type="submit" value="Post Comment" class="comment-btn">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <div class="single-inner-container" id="comment-data">
+            <h4 class="heading">Comments</h4>
+            <div class="inner-data-comment">
+                <div class="padd">
+                    <%postData.postComments.forEach((comment)=> {
+                        if(!comment.isDeleted) { %>
+                        <div class="comment-card">
+                            <h4>
+                                <%=comment.authorId.fullName%>
+                            </h4>
+                            <p>
+                                <%=comment.comment%>
+                            </p>
+                            <h5>
+                                <%=comment.date%>
+                            </h5>
+                            <button class="comment-delete-btn" value="<%=comment._id%>">Delete</button>
+                        </div>
+                        <%}})%>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('form#my-form').submit(function (e) {
+            e.preventDefault();
+            const url = new URL(window.location.href);
+            const searchParams = url.searchParams;
+            const data = new FormData(this);
+            data.append('postid', searchParams.get("id"))
+            $.ajax({
+                url: '/posts/add-comment',
+                type: 'PUT',
+                data: data,
+                success: (data) => {
+                    window.location.reload();
+                },
+                error: async (response) => {
+                    if (response.status == 401) {
+                        alert('Please Login to Comment');
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        });
+        $('button.comment-delete-btn').click(function (e) {
+            const url = new URL(window.location.href);
+            const searchParams = url.searchParams;
+            let formData = new FormData();
+            formData.append('id', $(this).val())
+            formData.append('postid', searchParams.get("id"))
+            $.ajax({
+                url: '/posts/remove-comment',
+                type: 'DELETE',
+                data: formData,
+                success: (data) => {
+                    window.location.reload();
+                },
+                error: (response) => {
+                    console.log(JSON.stringify(response));
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        })
+    </script>
+</body>
+
+</html>

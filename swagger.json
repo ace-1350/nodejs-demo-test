@@ -1,0 +1,161 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Node.js Project Demo",
+    "version": "1.0.0",
+    "description": "Node.js Project Demo APIs documentation",
+    "licence": {
+      "name": "Asif Sk"
+    }
+  },
+  "host": "localhost:3001",
+  "basepath": "/",
+  "tags": [
+    {
+      "name": "Users",
+      "description": "All user routes"
+    },
+    {
+      "name": "Posts",
+      "description": "All posts routes"
+    }
+  ],
+  "schemes": ["http"],
+  "consumes": ["application/json"],
+  "produces": ["application/json"],
+  "securityDefinitions": {
+    "jwt": {
+      "type": "apiKey",
+      "in": "cookie",
+      "name": "token"
+    }
+  },
+  "security": [
+    {
+      "jwt": []
+    }
+  ],
+  "paths": {
+    "/user/sign-up": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User Sign Up",
+        "consumes": ["application/json", "multipart/form-data"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to create",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "New user is created",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "403": {
+            "description": "User already Exists"
+          },
+          "400": {
+            "description": "Validation Error"
+          }
+        }
+      }
+    },
+    "/posts/": {
+      "get": {
+        "tags": ["Posts"],
+        "summary": "Get all posts when user is not Logged-In",
+        "responses": {
+          "200": {
+            "description": "Details of Post",
+            "schema": {
+              "$ref": "#/definitions/allposts"
+            }
+          }
+        }
+      }
+    },
+    "/user/sign-in": {
+      "post": {
+        "tags": ["Users"],
+        "summary": "User Sign In",
+        "consumes": ["application/json", "multipart/form-data"],
+        "parameters": [
+          {
+            "name": "user",
+            "in": "body",
+            "description": "User that we want to login or authenticate",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfull login",
+            "schema": {
+              "$ref": "#/definitions/user"
+            }
+          },
+          "401": {
+            "description": "User already loggedin"
+          },
+          "422": {
+            "description": "Validation Error"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "user": {
+      "required": [
+        "fullname",
+        "username",
+        "email",
+        "password",
+        "confirmPassword"
+      ],
+      "properties": {
+        "fullname": {
+          "type": "string"
+        },
+        "username": {
+          "type": "string"
+        },
+        "email": {
+          "type": "string"
+        },
+        "password": {
+          "type": "string"
+        },
+        "confirmPassword": {
+          "type": "string"
+        }
+      }
+    },
+    "allposts": {
+      "required": ["postTitle", "postImage", "postContent", "postAuthor"],
+      "properties": {
+        "postTitle": {
+          "type": "string"
+        },
+        "postImage": {
+          "type": "string"
+        },
+        "postContent": {
+          "type": "string"
+        },
+        "postAuthor": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update User</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="post-head">
+        <h1>Update User</h1>
+        <a href="/posts/my-post"><strong>My Posts</strong></a>
+    </div>
+    <div class="container">
+        <div class="inner-container">
+            <form action="#" method="post" id="my-form">
+                <label for="fullname"><strong>Full Name</strong></label><br>
+                <input type="text" name="fullname" value="<%=response.fullname%>"class="input"><br><br>
+
+                <label for="username"><strong>User Name</strong></label><br>
+                <input type="text" name="username" value="<%=response.username%>"class="input"><br><br>
+
+                <label for="email"><strong>Email</strong></label><br>
+                <input type="email" name="email" value="<%=response.email%>"class="input"><br><br>
+                <a href="/user/update-password">Change Password !!</a>
+                <div class="btn-container"><br>
+                    <input type="submit" value="Submit" class="btn">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $('form#my-form').submit(function (e) {
+            e.preventDefault();
+            const data = new FormData(this);
+            $.ajax({
+                url: '/user/update',
+                type: 'PUT',
+                data: data,
+                success: async (data) => {
+                    await alert("Data Updated");
+                    window.location.href = data.route;
+                },
+                error: (response) => {
+                    if(response.status == 400){
+                        alert(`Error Code : ${response.status}\nError Message : ${response.responseJSON[0].message}`);
+                    }
+                    else{
+                        console.log(response.responseJSON)
+                        alert(`Error Code : ${response.status}\nError Message : ${response.responseJSON.message}`);
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        });
+    </script>
+</body>
+
+</html>

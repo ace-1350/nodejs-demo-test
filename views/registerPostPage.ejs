@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register User</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <h1 class="head">Create Post</h1>
+    <div class="container">
+        <div class="inner-container">
+            <form action="#" method="post" id="my-form" enctype="multipart/form-data">
+                <label for="posttitle"><strong>Post Title</strong></label><br>
+                <input type="text" name="posttitle" class="input"><br><br>
+
+                <label for="postimage"><strong>Post Image</strong></label><br>
+                <input type="file" name="postimage" class="input"><br><br>
+
+                <label for="postcontent"><strong>Post Content</strong></label><br>
+                <textarea name="postcontent"></textarea><br><br>
+                <div class="btn-container">
+                    <input type="submit" value="Submit" class="btn">
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        $('form#my-form').submit(function (e) {
+            e.preventDefault();
+            const data = new FormData(this);
+            $.ajax({
+                url: '/posts/register',
+                type: 'POST',   
+                data: data,
+                success: (data) => {
+                    if (data.status == 200) {
+                        window.location.href = data.route
+                    }
+                },
+                error: (response) => {
+                    console.log(response);
+                    if(response.status == 400){
+                        alert(`Error Code : ${response.status}\nError Message : ${response.responseJSON[0].message}`);
+                    }
+                    else{
+                        console.log(response.responseJSON)
+                        alert(`Error Code : ${response.status}\nError Message : ${response.responseJSON.message}`);
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        });
+    </script>
+</body>
+
+</html>

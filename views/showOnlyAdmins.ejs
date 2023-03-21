@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+</head>
+
+<body style="overflow-x: hidden;">
+    <div class="navbar">
+        <div style="display: flex;">
+            <a href="/admin" class="logo"><strong>Post</strong></a>
+            <a href="/admin/all-user" class="logo"><strong>All User</strong></a>
+            <a href="/admin/all-admin" class="logo"><strong>Admins</strong></a>
+        </div>
+        <ul>
+            <%if(response.isLoggedIn){%>
+                <li><a href="/posts/register"><strong>Add Post</strong></a></li>
+                <li><a href="/user/profile"><strong>Profile</strong></a></li>
+                <li><a href="/user/logout"><strong>Log Out</strong></a></li>
+                <%} else {%>
+                    <li><a href="/login"><strong>Login</strong></a></li>
+                    <li><a href="/register"><strong>Sign Up</strong></a></li>
+                    <%}%>
+        </ul>
+    </div>
+    <div class="content-container-admin">
+        <div class="inner-content-container-admin">
+            <%response.data.forEach(user=> {%>
+                <div class="card-admin">
+                    <div class="card-head-admin">
+                        <h1>
+                            <%=user.fullName%>
+                        </h1>
+                    </div>
+                    <div class="card-body-admin">
+                        <p> <strong>Username</strong> : <%=user.userName%>
+                        </p>
+                        <p><strong>Email</strong> : <%=user.email%>
+                        </p>
+                        <p><strong>User Type</strong> : <%=user.role.role%>
+                        </p>
+                    </div>
+                    <div class="card-footer-admin">
+                        <button id="make-user <%=user._id%>" value="<%=user._id%>">Make User</button>
+                    </div>
+                </div>
+                <%})%>
+        </div>
+    </div>
+    <script>
+        $('.card-footer-admin').on('click', 'button', function (e) {
+            e.preventDefault();
+            const id = e.target.id;
+            const [button, value] = id.split(' ');
+            let formData = new FormData();
+            formData.append('id', value);
+
+            $.ajax({
+                url: '/admin/makeUser',
+                type: 'PUT',
+                data: formData,
+                success: (data) => {
+                    window.location.reload();
+                },
+                error: (response) => {
+                    if (response.status == 401) {
+                        alert("Unauthorized, Can only be done by Super Admin");
+                    }
+                },
+                cache: false,
+                contentType: false,
+                processData: false,
+            })
+        })
+    </script>
+</body>
+
+</html>

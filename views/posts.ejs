@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Posts Page</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@200&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/stylesheet/style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+
+</head>
+
+<body>
+    <div class="navbar">
+        <a class="logo"><strong>Post</strong></a>
+        <ul>
+            <li><a href="/login"><strong>Login</strong></a></li>
+            <li><a href="/register"><strong>Sign Up</strong></a></li>
+        </ul>
+    </div>
+    <div class="content-container">
+        <div class="inner-content-container">
+            <% response.postdata.forEach((post)=> { %>
+                <div class="card">
+                    <div class="card-head">
+                        <h1>
+                            <%=post.postTitle%>
+                        </h1>
+                        <h4><a href="/posts/single-post?id=<%=post._id%>">Open</a></h4>
+                    </div>
+                    <img src="images/<%=post.postImage%>" alt="img">
+                    <p>
+                        <%=post.postContent%>
+                    </p>
+                    <div class="card-footer">
+                        <h5>~ <%=post.postAuthor.fullName%></h5>
+                    </div>
+                </div>
+                <%})%>
+        </div>
+    </div>
+</body>
+
+</html>
